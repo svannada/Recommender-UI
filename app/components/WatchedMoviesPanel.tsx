@@ -1,10 +1,5 @@
 import React from 'react';
-
-interface Movie {
-  id: number;
-  title: string;
-  image: string;
-}
+import { Movie } from '../api' // Import the API function
 
 interface WatchedMoviesPanelProps {
   movies: Movie[];
@@ -17,8 +12,8 @@ const WatchedMoviesPanel: React.FC<WatchedMoviesPanelProps> = ({ movies }) => {
       <div className="wat-movie-grid">
         {/* Render watched movies */}
         {movies.map(movie => (
-          <div key={movie.id} className="movie-item">
-            <img src={movie.image} alt={movie.title} />
+          <div key={movie.movieId} className="movie-item">
+            <img src={movie.cover_url} alt={movie.title} />
             <div className="movie-title">{movie.title}</div>
           </div>
         ))}

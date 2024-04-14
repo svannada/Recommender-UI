@@ -3,30 +3,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 
 import '../components/css/recommendmovie.css'; 
+import { Movie, Settings } from '../api' // Import the API function
 
-interface Movie {
-  id: number;
-  title: string;
-  image: string;
-}
 
 interface SettingsModalProps {
   onSave: (settings: Settings) => void;
   onClose: () => void;
 }
 
-interface Settings {
-  contentValue: number;
-  similarUserValue: number;
-  excludeWatched: boolean;
-  selectedUser: string;
-  numRecommendations: number; 
-}
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ onSave, onClose }) => {
   const [contentValue, setContentValue] = useState(0.5);
   const [similarUserValue, setSimilarUserValue] = useState(0.5);
-  const [excludeWatched, setExcludeWatched] = useState(true);
   const [selectedUser, setSelectedUser] = useState('');
   const [numRecommendations, setNumRecommendations] = useState(10); 
 
@@ -46,10 +34,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onSave, onClose }) => {
     setContentValue(remainingValue > 1.0 ? 1.0 : remainingValue);
   };
 
-  const handleExcludeWatchedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setExcludeWatched(event.target.checked);
-  };
-
   const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedUser(event.target.value);
   };
@@ -62,7 +46,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onSave, onClose }) => {
     const settings: Settings = {
       contentValue,
       similarUserValue,
-      excludeWatched,
       selectedUser,
       numRecommendations, 
     };
@@ -105,16 +88,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onSave, onClose }) => {
             />
             <div className="value-container">{(similarUserValue).toFixed(1)}</div>
           </div>
-          <div className="form-group checkbox-container">
-            <input
-              type="checkbox"
-              id="exclude-watched"
-              className="form-checkbox"
-              checked={excludeWatched}
-              onChange={handleExcludeWatchedChange}
-            />
-            <label htmlFor="exclude-watched" className="form-label">Exclude watched</label>
-          </div>
           <div className="form-group">
             <label htmlFor="popular-user" className="form-label">Popular User:</label>
             <select id="popular-user" className="form-select" onChange={handleUserChange}>
@@ -147,17 +120,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onSave, onClose }) => {
 
 interface RecommendedMoviesPanelProps {
   movies: Movie[];
+  onSaveSettingsExt: (settingsExt: Settings) => void;
 }
 
-const RecommendedMoviesPanel: React.FC<RecommendedMoviesPanelProps> = ({ movies }) => {
+const RecommendedMoviesPanel: React.FC<RecommendedMoviesPanelProps> = ({ movies,  onSaveSettingsExt }) => {
   const [showSettings, setShowSettings] = useState(false);
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
   };
 
-  const handleSaveSettings = (settings: Settings) => {
-    toggleSettings(); 
+  const onSaveSettings = (settings: Settings) => {
+    toggleSettings();
+    onSaveSettingsExt(settings);
   };
 
   return (
@@ -170,13 +145,13 @@ const RecommendedMoviesPanel: React.FC<RecommendedMoviesPanelProps> = ({ movies 
       </div>
       <div className="rec-movie-grid">
         {movies.map(movie => (
-          <div key={movie.id} className="movie-item">
-            <img src={movie.image} alt={movie.title} />
+          <div key={movie.movieId} className="movie-item">
+            <img src={movie.cover_url} alt={movie.title} />
             <div className="movie-title">{movie.title}</div>
           </div>
         ))}
       </div>
-      {showSettings && <SettingsModal onSave={handleSaveSettings} onClose={toggleSettings} />}
+      {showSettings && <SettingsModal onSave={onSaveSettings} onClose={toggleSettings} />}
     </div>
   );
 };
