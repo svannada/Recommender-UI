@@ -7,15 +7,17 @@ import { Movie, Settings } from '../api' // Import the API function
 
 
 interface SettingsModalProps {
+  userId : string;
+  popularUsers : string[];
   onSave: (settings: Settings) => void;
   onClose: () => void;
 }
 
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ onSave, onClose }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ userId, onSave, onClose, popularUsers }) => {
   const [contentValue, setContentValue] = useState(0.5);
   const [similarUserValue, setSimilarUserValue] = useState(0.5);
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState(userId);
   const [numRecommendations, setNumRecommendations] = useState(10); 
 
   const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,14 +91,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onSave, onClose }) => {
             <div className="value-container">{(similarUserValue).toFixed(1)}</div>
           </div>
           <div className="form-group">
-            <label htmlFor="popular-user" className="form-label">Popular User:</label>
-            <select id="popular-user" className="form-select" onChange={handleUserChange}>
-              <option value="">Select User</option>
-              <option value="user1">User 1</option>
-              <option value="user2">User 2</option>
-              <option value="user3">User 3</option>
-            </select>
-          </div>
+          <label htmlFor="popular-user" className="form-label">Popular User:</label>
+          <select id="popular-user" className="form-select" value={selectedUser} onChange={handleUserChange}>
+            <option value="">Select User</option>
+            {popularUsers.map(user => (
+              <option key={user} value={`User${user}`}>User{user}</option>
+            ))}
+          </select>
+         </div>
           <div className="form-group">
             <label htmlFor="num-recommendations" className="form-label"># Recommendations:</label>
             <input
@@ -119,26 +121,29 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onSave, onClose }) => {
 };
 
 interface RecommendedMoviesPanelProps {
+  userId : string;
   movies: Movie[];
+  popularUsers : string[];
   onSaveSettingsExt: (settingsExt: Settings) => void;
 }
 
-const RecommendedMoviesPanel: React.FC<RecommendedMoviesPanelProps> = ({ movies,  onSaveSettingsExt }) => {
+const RecommendedMoviesPanel: React.FC<RecommendedMoviesPanelProps> = ({ userId, movies, popularUsers, onSaveSettingsExt }) => {
   const [showSettings, setShowSettings] = useState(false);
-
+  const [currentuserId, setcurrentUserId] = useState(userId);
   const toggleSettings = () => {
     setShowSettings(!showSettings);
   };
 
   const onSaveSettings = (settings: Settings) => {
     toggleSettings();
+    setcurrentUserId(settings.selectedUser);
     onSaveSettingsExt(settings);
   };
 
   return (
     <div className="panel">
       <div className="panel-header flex justify-between items-center">
-        <h2>Recommended Movies</h2>
+        <h2>Recommended Movies for {currentuserId}</h2>
         <button onClick={toggleSettings} className="settings-button">
           <FontAwesomeIcon icon={faCog} />
         </button>
@@ -151,7 +156,7 @@ const RecommendedMoviesPanel: React.FC<RecommendedMoviesPanelProps> = ({ movies,
           </div>
         ))}
       </div>
-      {showSettings && <SettingsModal onSave={onSaveSettings} onClose={toggleSettings} />}
+      {showSettings && <SettingsModal userId={userId} popularUsers={popularUsers}  onSave={onSaveSettings} onClose={toggleSettings} />}
     </div>
   );
 };

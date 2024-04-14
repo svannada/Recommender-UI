@@ -7,7 +7,7 @@ import RecommendedMoviesPanel from './components/RecommendedMoviesPanel';
 import Header from './components/Header'; 
 
 import '../app/globals.css'; 
-import { fetchRecommendedAndWatchedMovies, Movie, Settings } from './api'; // Import the API function
+import { fetchRecommendedAndWatchedMovies, fetchPopularUsers,  Movie, Settings } from './api'; // Import the API function
 
 // Define default settings
 const defaultSettings: Settings = {
@@ -23,34 +23,8 @@ const Home: React.FC = () => {
 
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
   const [watchedMovies, setWatchedMovies] = useState<Movie[]>([]);
+  const [popularUsers, setPopularUsers] = useState<string[]>([]);
 
-  // const watchedMovies = [
-  //   { id: 1, title: "This is the biggest description of the Movie 1", image: "https://picsum.photos/seed/picsum/200/300" },
-  //   { id: 2, title: "This is the biggest description of the Movie 2", image: "https://picsum.photos/id/237/200/300" },
-  //   { id: 3, title: "This is the biggest description of the Movie 3", image: "https://picsum.photos/200/300?grayscale" },
-  //   { id: 4, title: "This is the biggest description of the Movie 1", image: "https://picsum.photos/seed/picsum/200/300" },
-  //   { id: 5, title: "This is the biggest description of the Movie 2", image: "https://picsum.photos/id/237/200/300" },
-  //   { id: 6, title: "This is the biggest description of the Movie 3", image: "https://picsum.photos/200/300?grayscale" },
-  //   { id: 7, title: "This is the biggest description of the Movie 1", image: "https://picsum.photos/seed/picsum/200/300" },
-  //   { id: 8, title: "This is the biggest description of the Movie 2", image: "https://picsum.photos/id/237/200/300" },
-  //   { id: 9, title: "This is the biggest description of the Movie 3", image: "https://picsum.photos/200/300?grayscale" },
-  //   { id: 10, title: "This is the biggest description of the Movie 1", image: "https://picsum.photos/seed/picsum/200/300" },
-  //   { id: 11, title: "This is the biggest description of the Movie 2", image: "https://picsum.photos/id/237/200/300" },
-  //   { id: 12, title: "This is the biggest description of the Movie 3", image: "https://picsum.photos/200/300?grayscale" },
-  //   ];
-  
-  // const recommendedMovies = [
-  //   { id: 1, title: "This is the biggest description of the Movie 4", image: "https://picsum.photos/200/300/?blur" },
-  //   { id: 2, title: "This is the biggest description of the Movie 5", image: "https://picsum.photos/id/870/200/300?grayscale&blur=2" },
-  //   { id: 3, title: "This is the biggest description of the Movie 6", image: "https://picsum.photos/200/300.jpg" },
-  //   { id: 4, title: "This is the biggest description of the Movie 4", image: "https://picsum.photos/200/300/?blur" },
-  //   { id: 5, title: "This is the biggest description of the Movie 5", image: "https://picsum.photos/id/870/200/300?grayscale&blur=2" },
-  //   { id: 6, title: "This is the biggest description of the Movie 6", image: "https://picsum.photos/200/300.jpg" },
-  //   { id: 7, title: "This is the biggest description of the Movie 4", image: "https://picsum.photos/200/300/?blur" },
-  //   { id: 8, title: "This is the biggest description of the Movie 5", image: "https://picsum.photos/id/870/200/300?grayscale&blur=2" },
-  //   { id: 9, title: "This is the biggest description of the Movie 6", image: "https://picsum.photos/200/300.jpg" },
-  //   ];
-  
     // Function to fetch recommended and watched movies
     const fetchMovies = async (settings: Settings) => {
       try {
@@ -62,12 +36,23 @@ const Home: React.FC = () => {
       }
     };
 
+    // Function to fetch popular users
+    const fetchUsers = async () => {
+      try {
+        const { popularUsers } = await fetchPopularUsers();
+        setPopularUsers(popularUsers);
+      } catch (error) {
+        console.error('Error fetching popular users:', error);
+      }
+    };
+
       const handleLogin = (userId : string) =>  {
         setIsLoggedIn(true);
         setUserId(userId);
         document.body.classList.add('no-scroll'); // To add scroll bar
         defaultSettings.selectedUser = userId
         fetchMovies(defaultSettings); // Fetch movies when user logs in
+        fetchUsers();
       };
 
       const handleSaveSettings = (settings : Settings) =>  {
@@ -99,7 +84,8 @@ const Home: React.FC = () => {
               </div>
               <div className="md:col-span-2">
                 <div className="panel">
-                  <RecommendedMoviesPanel onSaveSettingsExt={handleSaveSettings} movies={recommendedMovies} />
+                  <RecommendedMoviesPanel userId={userId} onSaveSettingsExt={handleSaveSettings} movies={recommendedMovies}
+                  popularUsers={popularUsers}  />
                 </div>
               </div>
             </div>

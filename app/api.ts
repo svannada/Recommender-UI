@@ -40,3 +40,24 @@ export const fetchRecommendedAndWatchedMovies = async (settings: Settings): Prom
     throw error;
   }
 };
+
+// API function to fetch popular user list
+export const fetchPopularUsers = async (): Promise<{ popularUsers: string[] }> => {
+  try {
+
+    // Construct the API URL with parameters
+    const API_URL = `https://data472recommenderapi-dfd873cfc1f2.herokuapp.com/api/popularusers`;
+    
+    // Make a GET request to the constructed URL
+    const response = await axios.get(API_URL);
+    
+    // Extract the popular Users from the response data
+    const popularUsers: string[] = response.data.popular_users;
+    
+    return { popularUsers};
+  } catch (error) {
+    // Handle errors
+    console.error('Error fetching popular users:', error);
+    throw error;
+  }
+};
