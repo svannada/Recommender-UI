@@ -1,34 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next JS App - Movie Recommender System
 
-## Getting Started
+## Introduction
+This Next JS application implements a movie recommender system for a logged in user. When the user logins to the system, already watched movies are displayed on the left side of the screen and the recommended movies are displayed on the right side of the screen based on collaborative filtering and content-based filtering techniques. These recommendations can be controlled by the recommendation settings represented by the settings icon present in the recommendation panel. This allows more agency to the user in fine tuning the recommendations. 
 
-First, run the development server:
+## Login Screen
+- This requires the User ID which is nothing but the users present in the MovieLens small dataset.
+- Example of the User ID is - User 1. Where 1 is the the User ID in the MovieLens dataset.
+- Required Password needs to be given for the corresponding User.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Watched Movies
+- This UI panel contains the code to show the watched movies based on the logged in user.
+- This data is again fetched against the MovieLens small dataset.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Recommended Movies
+- This UI panel contains the code to show the recommended movies based on the recommendation settings.
+- The recommendation settings can be configured further. The settings include  - Content Slider, Similar User, Popular User and # of Recommendations.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Home Screen
+- This would be the launch point of the application. 
+- The home screen would contain Header, Login Screen , Watched and Recommended Movie panels. 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## api.ts
+- Function to trigger the api to get the watched, recommended movies based on the recommendation settings.   
+- Function to trigger the api to get the popular users from the MovieLens small dataset.
 
-## Learn More
+## Styles
+- Component level styling is maintained at ./components/css level. As of now the component level styling is done for only recommended movie settings panel. 
+- Global styles are present at globals.css 
 
-To learn more about Next.js, take a look at the following resources:
+## CORS
+- CORS Settings are configured in the next.config.js
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
+1. The application can be run using `npm run dev`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Deployed URL
+This API is deployed at Vercel with the URL - https://recommender-ui.vercel.app/
 
-## Deploy on Vercel
+## Author
+Sridhar
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Date
+04/25/2024
