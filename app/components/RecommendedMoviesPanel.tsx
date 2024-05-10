@@ -56,12 +56,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ userId, onSave, onClose, 
 
   return (
     <div className="modal">
-      <div className="modal-content">
-        <div className="modal-header">
-          <strong><h2>Recommender Settings</h2></strong>
-          <button className="close-button" onClick={onClose}>×</button>
-        </div>
-        <div className="modal-body">
+    <div className="modal-content">
+      <div className="modal-header">
+        <strong><h2>Recommender Settings</h2></strong>
+        <button className="close-button" onClick={onClose}>×</button>
+      </div>
+      <div className="modal-body">
+        {/* General Settings */}
+        <div className="subsection">
+          <h3>General Settings</h3>
           <div className="form-group">
             <label htmlFor="content" className="form-label">Content:</label>
             <input
@@ -73,9 +76,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ userId, onSave, onClose, 
               step="0.1"
               value={contentValue}
               onChange={handleContentChange}
-              title= "Control Recommendations based on User Watched Content"
+              title="Control Recommendations based on User Watched Content"
             />
-            <div className="value-container">{(contentValue).toFixed(1)}</div>
+            <div className="value-container">{contentValue.toFixed(1)}</div>
           </div>
           <div className="form-group">
             <label htmlFor="similar-user" className="form-label">Similar User:</label>
@@ -88,19 +91,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ userId, onSave, onClose, 
               step="0.1"
               value={similarUserValue}
               onChange={handleSimilarUserChange}
-              title= "Control Recommendations based on Watch History of Similar Users"
+              title="Control Recommendations based on Watch History of Similar Users"
             />
-            <div className="value-container">{(similarUserValue).toFixed(1)}</div>
+            <div className="value-container">{similarUserValue.toFixed(1)}</div>
           </div>
-          <div className="form-group">
-          <label htmlFor="popular-user" className="form-label">Popular User:</label>
-          <select id="popular-user" className="form-select" value={selectedUser} onChange={handleUserChange}>
-            <option value="">Select User</option>
-            {popularUsers.map(user => (
-              <option key={user} value={`User${user}`}>User{user}</option>
-            ))}
-          </select>
-         </div>
           <div className="form-group">
             <label htmlFor="num-recommendations" className="form-label"># Recommendations:</label>
             <input
@@ -113,11 +107,25 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ userId, onSave, onClose, 
             />
           </div>
         </div>
-        <div className="modal-footer">
-          <button onClick={handleSaveSettings} className="save-button">Save</button>
+        {/* Popular User Settings */}
+        <div className="subsection">
+          <h3>Popular User Settings</h3>
+          <div className="form-group">
+            <label htmlFor="popular-user" className="form-label">Popular User:</label>
+            <select id="popular-user" className="form-select" value={selectedUser} onChange={handleUserChange}>
+              <option value="">Select User</option>
+              {popularUsers.map(user => (
+                <option key={user} value={`User${user}`}>User{user}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
+      <div className="modal-footer">
+        <button onClick={handleSaveSettings} className="save-button">Save</button>
+      </div>
     </div>
+  </div>
   );
   
 };
