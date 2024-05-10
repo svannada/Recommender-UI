@@ -73,6 +73,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ userId, onSave, onClose, 
               step="0.1"
               value={contentValue}
               onChange={handleContentChange}
+              title= "Control Recommendations based on User Watched Content"
             />
             <div className="value-container">{(contentValue).toFixed(1)}</div>
           </div>
@@ -87,6 +88,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ userId, onSave, onClose, 
               step="0.1"
               value={similarUserValue}
               onChange={handleSimilarUserChange}
+              title= "Control Recommendations based on Watch History of Similar Users"
             />
             <div className="value-container">{(similarUserValue).toFixed(1)}</div>
           </div>

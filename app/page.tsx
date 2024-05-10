@@ -26,11 +26,12 @@ const Home: React.FC = () => {
   const [popularUsers, setPopularUsers] = useState<string[]>([]);
 
     // Function to fetch recommended and watched movies
-    const fetchMovies = async (settings: Settings) => {
+    const fetchMovies = async (settings: Settings, islogin: boolean) => {
       try {
         const { recommendedMovies, watchedMovies } = await fetchRecommendedAndWatchedMovies(settings);
         setRecommendedMovies(recommendedMovies);
-        setWatchedMovies(watchedMovies);
+        if(islogin)
+          setWatchedMovies(watchedMovies);
       } catch (error) {
         console.error('Error fetching movies:', error);
       }
@@ -51,12 +52,12 @@ const Home: React.FC = () => {
         setUserId(userId);
         document.body.classList.add('no-scroll'); // To add scroll bar
         defaultSettings.selectedUser = userId
-        fetchMovies(defaultSettings); // Fetch movies when user logs in
+        fetchMovies(defaultSettings, true); // Fetch movies when user logs in
         fetchUsers();
       };
 
       const handleSaveSettings = (settings : Settings) =>  {
-        fetchMovies(settings); // Fetch movies on settings change
+        fetchMovies(settings, false); // Fetch movies on settings change
       };
     
       const handleLogout = () => {
